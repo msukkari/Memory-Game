@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
-public class SceneController : MonoBehaviour {
+public class SceneController : MonoBehaviour{
 	[SerializeField] private MemoryCard originalCard;
 	[SerializeField] private Sprite[] images;
+	[SerializeField] private TextMesh scoreLabel;
 	private MemoryCard _firstRevealed;
 	private MemoryCard _secondRevealed;
 	private int _score = 0;
@@ -22,7 +24,7 @@ public class SceneController : MonoBehaviour {
 			_firstRevealed = card;
 		} else {
 			_secondRevealed = card;
-			StartCoroutine (CheckMatch ());
+			StartCoroutine (CheckMatch());
 		}
 
 
@@ -30,13 +32,14 @@ public class SceneController : MonoBehaviour {
 
 	private IEnumerator CheckMatch(){
 		if (_firstRevealed.id == _secondRevealed.id) {
-			//match
+			scoreLabel.text = "Score: " + ++_score;
 		} else {
-			yield return new WaitForSeconds (.5f);
+			yield return new WaitForSeconds(.5f);
 
-			_firstRevealed.Unreveal ();
-			_secondRevealed.Unreveal ();
+			_firstRevealed.Unreveal();
+			_secondRevealed.Unreveal();
 		}
+		
 
 
 		_firstRevealed = null;
@@ -57,7 +60,7 @@ public class SceneController : MonoBehaviour {
 				if (i == 0 && j == 0)  // first card
 					card = originalCard;
 				else
-					card = Instantiate (originalCard) as MemoryCard;
+					card = Instantiate(originalCard) as MemoryCard;
 
 				int index = j * gridCols + i;
 				int id = numbers [index];
@@ -65,7 +68,7 @@ public class SceneController : MonoBehaviour {
 
 				float posX = (offsetX * i) + startPos.x;
 				float posY = -(offsetY * j) + startPos.y;
-				card.transform.position = new Vector3 (posX, posY, startPos.z);
+				card.transform.position = new Vector3(posX, posY, startPos.z);
 					
 
 			}
@@ -84,5 +87,9 @@ public class SceneController : MonoBehaviour {
 		}
 
 		return newArray;
+	}
+
+	public void Restart(){
+		SceneManager.LoadScene("scene");
 	}
 }
